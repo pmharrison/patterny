@@ -1,0 +1,5 @@
+NAME/ID	(RUNNY)	SEQLEN	HPEP	HPEP_PROPORTION	MIN_TRACT_LENGTH	NORMALP,ZSCORE,(MEAN+/-STD)	HPEP_PER_AATYPE
+=======	=======	======	====	===============	================	===========================	===============
+disprot|DP04200r003	RUNNY	150	7	0.046667	3	3.19e-01,1.00,(3.73+/-3.28)	|K=4|S=3|
+disprot|DP03982r004	RUNNY	210	41	0.195238	3	2.73e-08,5.56,(10.94+/-5.41)	|E=17|G=3|K=6|P=6|S=9|
+disprot|DP00706r007	RUNNY	112	28	0.250000	3	8.17e-01,-0.23,(29.37+/-5.91)	|G=3|S=25|
