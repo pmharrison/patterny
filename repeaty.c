@@ -1,3 +1,29 @@
+/******************************************************************************/
+/*  repeaty.c  */ 
+/*  code to calculate repetitiveness of protein tracts */ 
+/****  Copyright 2025. Paul Martin Harrison. ****/ 
+/****
+ ****  Licensed under the 3-clause BSD license. See LICENSE.txt bundled with the package. 
+ ****/ 
+/****  
+ ****  to compile: 
+ ****   gcc -O2 -o repeaty repeaty.c -lm 
+ ****
+ ****  to run and get help: 
+ ****   ./repeaty -h 
+ **** 
+ ****  This program is part of patterny
+ ****
+ ****  The latest version of this code and patterny generally is available at:
+ ****    https://github.com/pmharrison
+ **** 
+ ****  Citations: 
+ **** 
+ ****    Harrison, PM. "Patterny: A troupe of decipherment helpers for intrinsic disorder, 
+ ****     low complexity and compositional bias in proteins", Biomolecules, ... 
+ ****/ 
+/*****************************************************************************************/ 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
