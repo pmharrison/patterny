@@ -1,0 +1,139 @@
+#!/bin/bash
+### change this to !/bin/zsh for zsh 
+
+#######################################
+#
+# patterny
+# --------
+#
+# This is a generic shell script to run patterny.
+#
+# It should run for bash or zsh.
+#
+# It takes two arguments:
+#    $1 = FASTA-format input file
+#    $2 = output file prefix.
+#
+# If the programs are run individually without using this
+# script, then the user can apply the -O option to insure
+# unique filenames.
+#
+#######################################
+
+# Default values for options
+CMODULES_OPTION="yes" # Default to 'yes' for -cmodules
+
+# Function to display help message
+show_help() {
+  echo "Usage: $0 [options] <FASTA-format input file> <output file prefix>"
+  echo ""
+  echo "Options:"
+  echo "  -cmodules <yes|no>  : Control whether to process Cmodules. Default is 'yes'."
+  echo "  -help               : Display this help message."
+  echo ""
+  # TODO: Fill in more detailed help information here
+  echo "This script runs a series of pattern analysis programs."
+  echo "The input file should be in FASTA format."
+  echo "The output files will be prefixed with the specified output file prefix."
+  echo ""
+}
+
+# Parse command-line options
+while (( $# > 0 )); do
+  case "$1" in
+    -cmodules)
+      if [[ -z "$2" || ("$2" != "yes" && "$2" != "no") ]]; then
+        echo "Error: -cmodules option requires 'yes' or 'no' as an argument."
+        show_help
+        exit 1
+      fi
+      CMODULES_OPTION="$2"
+      shift 2 # Consume -cmodules and its argument
+      ;;
+    -help)
+      show_help
+      exit 0
+      ;;
+    -*)
+      echo "Error: Unknown option: $1"
+      show_help
+      exit 1
+      ;;
+    *)
+      # Assume it's a positional argument (input file or prefix)
+      if [[ -z "$INPUT_FILE" ]]; then
+        INPUT_FILE="$1"
+      elif [[ -z "$OUTPUT_PREFIX" ]]; then
+        OUTPUT_PREFIX="$1"
+      else
+        echo "Error: Too many arguments."
+        show_help
+        exit 1
+      fi
+      shift # Consume the argument
+      ;;
+  esac
+done
+
+# Check if required arguments are provided
+if [[ -z "$INPUT_FILE" || -z "$OUTPUT_PREFIX" ]]; then
+  echo "Error: Missing required arguments."
+  show_help
+  exit 1
+fi
+
+# Assign positional arguments to variables for clarity
+FASTA_INPUT_FILE="$INPUT_FILE"
+OUTPUT_FILE_PREFIX="$OUTPUT_PREFIX"
+
+echo "Running patterny with the following settings:"
+echo "  Input File: $FASTA_INPUT_FILE"
+echo "  Output Prefix: $OUTPUT_FILE_PREFIX"
+echo "  Cmodules Processing: $CMODULES_OPTION"
+echo ""
+
+# warn if file prefix is already populated
+ls -F | grep "$OUTPUT_FILE_PREFIX" | grep out.txt | awk -f prefix.awk -v prefix="$OUTPUT_FILE_PREFIX"
+
+# moduley (outputs = $2.moduley.out.txt, $2.Cmodules.out.fasta)
+if [[ "$CMODULES_OPTION" == "yes" ]]; then
+chmod u+x moduley.sh
+./moduley.sh "$FASTA_INPUT_FILE" "$OUTPUT_FILE_PREFIX"
+fi
+
+# bandy (output = $2.bandy.out.txt)
+chmod u+x bandy.sh
+./bandy.sh "$FASTA_INPUT_FILE" "$OUTPUT_FILE_PREFIX"
+
+# blocky
+./blocky "$FASTA_INPUT_FILE" > "${OUTPUT_FILE_PREFIX}.blocky.out.txt"
+
+# Conditional execution for Cmodules based on -cmodules option
+if [[ "$CMODULES_OPTION" == "yes" ]]; then
+  ./blocky "${OUTPUT_FILE_PREFIX}.Cmodules.out.fasta" > "${OUTPUT_FILE_PREFIX}.Cmodules.blocky.out.txt"
+fi
+
+# runny
+./runny "$FASTA_INPUT_FILE" > "${OUTPUT_FILE_PREFIX}.runny.out.txt"
+
+# Conditional execution for Cmodules based on -cmodules option
+if [[ "$CMODULES_OPTION" == "yes" ]]; then
+  ./runny "${OUTPUT_FILE_PREFIX}.Cmodules.out.fasta" > "${OUTPUT_FILE_PREFIX}.Cmodules.runny.out.txt"
+fi
+
+# repeaty
+#
+# (This program is generally slower than all the others combined.
+# You can modify the script to specify a smaller sample size
+# for statistical calculations:
+# ./repeaty -s SMALLER_SAMPLE_SIZE ...
+# The default is 500.
+#
+./repeaty "$FASTA_INPUT_FILE" > "${OUTPUT_FILE_PREFIX}.repeaty.out.txt"
+
+# Conditional execution for Cmodules based on -cmodules option
+if [[ "$CMODULES_OPTION" == "yes" ]]; then
+  ./repeaty "${OUTPUT_FILE_PREFIX}.Cmodules.out.fasta" > "${OUTPUT_FILE_PREFIX}.Cmodules.repeaty.out.txt"
+fi
+
+
