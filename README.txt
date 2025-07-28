@@ -22,15 +22,20 @@ Use the following command in the Patterny directory:
 TO RUN THE PATTERNY SCRIPT: 
 --------------------------- 
 
-Use: 
+Use (inside the patterny directory): 
 
-  ./patterny INPUT_FILE_IN_FASTA_FORMAT OUTPUT_PREFIX 
+  sh patterny INPUT_FILE_IN_FASTA_FORMAT OUTPUT_PREFIX 
 
 The script patterny is a BASH script. 
 To make it a ZSH script, change the shebang at the top to !/bin/zsh . 
 Similarly, for the sub-scripts bandy.sh and moduley.sh . 
 
-The output appears inside the patterny directory. 
+Alternatively, you can make patterny executable with: 
+  chmod u+x 
+Then run like this: 
+  ./patterny INPUT_FILE_IN_FASTA_FORMAT OUTPUT_PREFIX 
+
+The outputs appear inside the patterny directory. 
 
 
 SCRIPT INPUT AND OPTIONS
@@ -57,11 +62,11 @@ sub-directory Examples. Output files for these examples are also
 provided in Examples/output, to check against. There may be slight 
 differences owing to different pseudo-random number generation. 
 
-To run patterny on the test data, use: 
+To run patterny on the test data (inside the patterny directory), use: 
 
-  ./patterny Examples/further-examples-disprot.fasta further-examples-disprot 
+  sh patterny Examples/further-examples-disprot.fasta further-examples-disprot 
 
-  ./patterny -cmodules no Examples/further-examples-cmodules-yeast.fasta further-examples-cmodules-yeast 
+  sh patterny -cmodules no Examples/further-examples-cmodules-yeast.fasta further-examples-cmodules-yeast 
 
 In the latter case, they are already CModules (i.e., compositional 
 modules defined using Moduley), so the option '-cmodules no' is specified. 
